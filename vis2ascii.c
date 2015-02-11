@@ -1,32 +1,6 @@
 /*
  * vis2ascii
  *   by Michael Steil, www.pagetable.com, 2004-09-19/20, 2015-02-11
- *
- * converts a Commodore 64 assembly source file in
- * - VisAss format or
- * - F8 AssBlaster format
- * into ASCII
- *
- * Usage:
- * 1) vis2ascii "test		.src"
- *    - creates test.asm
- * 2) vis2ascii "test       .src" test.txt
- *    - creates test.txt
- * 3) vis2ascii "text       .src" -
- *    - prints text to stdout
- *
- * Notes:
- * a) vis2ascii automatically strips the spaces between the
- *    name and the extension if no target name is given.
- * b) vis2ascii cannot extract files from .D64 images. Use
- *    a tool like c1541 to extract the files:
- *      echo extract | c1541 disk.d64
- *      for i in *.src; do vis2ascii "$i"; done
- * c) vis2ascii only converts the Vis-Ass file format into
- *    ASCII, it does not convert the assembly conventions
- *    into another format. That is, pseudo-opcodes and
- *    macros stay in Vis-Ass format, but converting this
- *    manually should be easy.
  */
 
 //#define DEBUG
