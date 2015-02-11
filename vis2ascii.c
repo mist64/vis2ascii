@@ -93,7 +93,15 @@ main(int argc, char **argv)
 	fread(data, 1, DATASIZE, f1);
 	fclose(f1);
 
+	// skip load address
 	unsigned char *d = data + 2;
+
+	// some files contain unknown data at the beginning;
+	// $FF marks the beginning of the first line
+	while (*d != 0xff) {
+		d++;
+	}
+
 	while (d[1]) {
 //		fprintf(f2, "%02x %02x %02x |||", d[0], d[1], d[2]);
 
