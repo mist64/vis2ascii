@@ -33,54 +33,54 @@
 
 #define DATASIZE 65536
 
-char decode[] = "a11cpxcpyldxldystxstyaaxasrarraxsdcpdopisckillarlaxrlarraslosretopadcandaslbitbcsbeqbccbmibnebplbvsbvcbrkclccldcliclvcmpdecdexdeyeorincinxinyjmpjsrldalsrnoporaphaphpplaplprolrorrtirtssbcsecsedseistataxtaytsxtxatxstya.la.ba.by.br.tx.md.de.ma.st.wa.on.wo.kc";
+static char decode[] = "a11cpxcpyldxldystxstyaaxasrarraxsdcpdopisckillarlaxrlarraslosretopadcandaslbitbcsbeqbccbmibnebplbvsbvcbrkclccldcliclvcmpdecdexdeyeorincinxinyjmpjsrldalsrnoporaphaphpplaplprolrorrtirtssbcsecsedseistataxtaytsxtxatxstya.la.ba.by.br.tx.md.de.ma.st.wa.on.wo.kc";
 
 FILE *f1, *f2;
 
-void cbmprintf(unsigned char *ss) {
-	unsigned char *s; char c;
-	for(s=ss; *s!=0; s++) {
-		if (*s<0x20) {
-			c = *s +0x60;
-		} else {
-			c = *s;
+static void
+cbmprintf(unsigned char *ss)
+{
+	for (unsigned char *s = ss; *s; s++) {
+		char c = *s;
+		if (c < 0x20) {
+			c += 0x60;
 		}
 		fprintf(f2, "%c", c);
 	}
 	fprintf(f2, "\n");
 }
 
-int main(int argc, char **argv) {
-	unsigned char data[DATASIZE];
-	unsigned char *d;
-	int i;
+int
+main(int argc, char **argv)
+{
 	char dest[256];
-	char *s, *t;
-
-	switch(argc) {
-		case 2:
+	switch (argc) {
+		case 2: {
+			char *s;
+			char *t;
 			strcpy(dest, argv[1]);
 			s = strrchr(dest, (int)'.');
 			if (!s) {
-				printf("Source file name does not end with \".src\".\n");
+				printf("Source file name does not end in \".src\".\n");
 				exit(1);
 			}
-			for (t = s-1; t>=dest; t--) {
-				if (*t!=' ') break;
+			for (t = s - 1; t >= dest; t--) {
+				if (*t != ' ') break;
 			}
 			t++;
 			strcpy(t, ".asm");
 			break;
+		}
 		case 3:
-			strcpy(dest,argv[2]);
+			strcpy(dest, argv[2]);
 			break;
 		default:
-			printf("vis2ascii\nUsage: vis2ascii source.src source.txt\n");
+			printf("Usage: vis2ascii source.src source.txt\n");
 			exit(1);
 	}
 
 	fprintf(stderr, "Converting \"%s\" to ", argv[1]);
-	if (dest[0]=='-') {
+	if (dest[0] == '-') {
 		f2 = stdout;
 		fprintf(stderr, "stdout...");
 	} else {
@@ -88,26 +88,30 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "\"%s\"...", dest);
 	}
 
+	unsigned char data[DATASIZE];
 	f1 = fopen(argv[1], "r");
 	fread(data, 1, DATASIZE, f1);
 	fclose(f1);
 
-	d = data+2;
-	while(d[1]) {
-		//		fprintf(f2, "%02x %02x %02x |||", d[0], d[1], d[2]);
+	unsigned char *d = data + 2;
+	while (d[1]) {
+//		fprintf(f2, "%02x %02x %02x |||", d[0], d[1], d[2]);
 
-		if (d[2]!=0x55) {
-			if (d[2]<0x48) fprintf(f2, "		");
-			fprintf(f2, " ");
-			for (i=0; i<3; i++) fprintf(f2, "%c", decode[d[2]*3+i]);
+		if (d[2] != 0x55) {
+			if (d[2] < 0x48) {
+				fprintf(f2, "\t");
+			}
+			for (int i = 0; i < 3; i++) {
+				fprintf(f2, "%c", decode[d[2] * 3 + i]);
+			}
 			fprintf(f2, " ");
 		}
 
-		d[d[1]]= 0;
+		d[d[1]] = 0;
 		cbmprintf(&d[3]);
 
-		d+=d[1];
+		d += d[1];
 	}
 	fclose(f2);
-	fprintf(stderr,"done.\n");
+	fprintf(stderr, "done.\n");
 }
