@@ -32,6 +32,10 @@ prints text to stdout.
 
 * If you are only converting a single file, you can also use the "print" functionality in the respective orginal editors inside an emulator to export the file to ASCII, but this tool is much more handy when converting all your old sources.
 
+## TODO
+
+Adding regular AssBlaster support should be easy; the AssBlaster format seems to be the F8 AssBlaster format with the VisAss opcode table. The two formats can be distinguished by the gamut of used menmonics.
+
 ## License
 
 [2-clause BSD](http://opensource.org/licenses/BSD-2-Clause)
